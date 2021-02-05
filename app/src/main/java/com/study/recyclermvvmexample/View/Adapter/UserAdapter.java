@@ -59,6 +59,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return users.size();
     }
 
+    public String getItem(int position){
+
+        String item_id = Integer.toString(users.get(position).getId());
+        return item_id;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView id,nickname;
 

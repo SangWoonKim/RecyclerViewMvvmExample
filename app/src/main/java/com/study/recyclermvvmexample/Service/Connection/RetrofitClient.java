@@ -42,5 +42,8 @@ public class RetrofitClient {
 
         @DELETE("delete/{nickname}")
         Call<UserDTO> delete_Delete(@Path("nickname") String deleteName);
+
+        //delete에 id를 참조해 삭제하는 것 추가 서버에도 코드 추가해야함
+        //insert추가
     }
 }

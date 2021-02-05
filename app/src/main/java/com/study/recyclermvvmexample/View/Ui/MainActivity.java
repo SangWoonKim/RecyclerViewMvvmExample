@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.study.recyclermvvmexample.R;
 import com.study.recyclermvvmexample.Service.Vo.UserDTO;
@@ -42,6 +44,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         setUpRecyclerView();
+        adapter.setOnItemClickListener(new UserAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                String item = adapter.getItem(position);
+                Intent selectOneIntent = new Intent(getApplicationContext(),UpdateDeleteActivity.class);
+                selectOneIntent.putExtra("idValue",item);
+                startActivity(selectOneIntent);
+            }
+        });
+
     }
 
     private void setUpRecyclerView() {
