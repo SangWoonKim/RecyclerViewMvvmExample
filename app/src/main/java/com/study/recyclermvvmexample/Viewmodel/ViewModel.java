@@ -13,7 +13,7 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
     private MutableLiveData<ArrayList<UserDTO>> users = new MutableLiveData<>();
 
     public ViewModel(){
-        repository = new UserRepository();
+        repository = UserRepository.getInstance();
     }
 
     public MutableLiveData<ArrayList<UserDTO>> getUsers(){
@@ -24,10 +24,10 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
         repository.insert(user);
     }
 
-    public void update(UserDTO user, String updateUser){
-        repository.update(user,updateUser);
+    public void update(String user, String updateUser, int position){
+        repository.update(user,updateUser,position);
     }
-    public void delete(UserDTO user){
+    public void delete(String user){
         repository.delete(user);
     }
 

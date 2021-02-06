@@ -35,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 .observe(this, new Observer<ArrayList<UserDTO>>() {
             @Override
             public void onChanged(ArrayList<UserDTO> userResponse) {
-//                ArrayList<UserDTO> items = userResponse.get().getId();
-//                int arrayValue = userResponse.indexOf(userResponse.size());
-               // userResponse.add();
                 users = userResponse;
                 adapter.updataData(users);
                 adapter.notifyDataSetChanged();
@@ -50,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 String item = adapter.getItem(position);
                 Intent selectOneIntent = new Intent(getApplicationContext(),UpdateDeleteActivity.class);
                 selectOneIntent.putExtra("idValue",item);
+                selectOneIntent.putExtra("itemPosition",position);
                 startActivity(selectOneIntent);
             }
         });

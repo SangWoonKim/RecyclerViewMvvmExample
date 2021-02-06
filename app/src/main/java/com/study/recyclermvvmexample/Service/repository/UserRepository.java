@@ -9,6 +9,7 @@ import com.study.recyclermvvmexample.Service.Connection.RetrofitClient;
 import com.study.recyclermvvmexample.Service.Vo.UserDTO;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,8 +17,9 @@ import retrofit2.Response;
 
 public class UserRepository {
     private final String TAG = getClass().getSimpleName();
-    ArrayList<UserDTO> users = new ArrayList<>();
-    UserDTO user = new UserDTO();
+    private static ArrayList<UserDTO> users;
+    String user;
+    UserDTO userParam = new UserDTO();
     private static final RetrofitClient.SelectAPI selectApI = RetrofitClient.getApiService();
     private final MutableLiveData<ArrayList<UserDTO>> userDTO = new MutableLiveData<>();
     private RetrofitClient.SelectAPI selectAPI = RetrofitClient.getApiService();
@@ -55,15 +57,15 @@ public class UserRepository {
     }
 
     public void insert(UserDTO user){
-        new InsertAsyncTask(this.user).execute(user);
+        new InsertAsyncTask(this.userParam).execute(user);
     }
 
-    public void update(UserDTO user, String updateUser){
-        new UpdateAsyncTask(this.user,updateUser).execute(user);
+    public void update(String user, String updateUser,int position){
+        new UpdateAsyncTask(user,updateUser,position).execute(user);
     }
 
-    public void delete(UserDTO user){
-        new DeleteAsyncTask(this.user).execute(user);
+    public void delete(String user){
+        new DeleteAsyncTask(user).execute(user);
     }
 
 
@@ -84,24 +86,28 @@ public class UserRepository {
         }
     }
 
+    //굳이 deprecated인 AsyncTask를 쓸 필요도 없을 뿐더러 적은 데이터를 보내는 행동이라
+    //비동기적 방식을 사용하지 않아도 되나 그냥 씀
 
-    private class UpdateAsyncTask extends AsyncTask<UserDTO,Void,Void>{
-        private UserDTO user;
+    private class UpdateAsyncTask extends AsyncTask<String,Void,Void>{
+        private String user;
         private String updateUser;
+        private int position;
 
-        public UpdateAsyncTask(UserDTO user,String updateUser) {
+        public UpdateAsyncTask(String user,String updateUser,int position) {
             this.user = user;
             this.updateUser = updateUser;
+            this.position = position;
         }
 
         @Override
-        protected Void doInBackground(UserDTO... userDTOS) {
-            Call<UserDTO> updateCall = selectAPI.put_update(user.getNickname(),updateUser);
+        protected Void doInBackground(String... string) {
+            Call<UserDTO> updateCall = selectAPI.put_update(user,updateUser);
             updateCall.enqueue(new Callback<UserDTO>() {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
                     if(response.isSuccessful()){
-                       // users.set(position,response.body());
+                        users.set(position,response.body());
                         //users = response.body();
                         userDTO.setValue(users);
                     }else{
@@ -114,20 +120,43 @@ public class UserRepository {
 
                 }
             });
+
             return null;
         }
     }
 
 
-    private class DeleteAsyncTask extends AsyncTask<UserDTO,Void,Void>{
-        private UserDTO userDTO;
+    private class DeleteAsyncTask extends AsyncTask<String,Void,Void>{
+        private String user;
 
-        public DeleteAsyncTask(UserDTO user) {
-            this.userDTO = user;
+        public DeleteAsyncTask(String user) {
+            this.user = user;
         }
 
         @Override
-        protected Void doInBackground(UserDTO... userDTOS) {
+        protected Void doInBackground(String... strings) {
+            Call<UserDTO> deleteCall = selectAPI.delete_Delete(user);
+            deleteCall.enqueue(new Callback<UserDTO>() {
+                @Override
+                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                    if(response.isSuccessful()){
+                        Iterator<UserDTO> iterator= users.iterator();
+                        while (iterator.hasNext()) {
+                            UserDTO hasnickname = iterator.next();
+                            if (hasnickname.getNickname().equals(user)) {
+                               iterator.remove();
+                            }
+                        }
+                        userDTO.setValue(users);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserDTO> call, Throwable t) {
+
+                }
+            });
+            getUserDTO();
             return null;
         }
     }

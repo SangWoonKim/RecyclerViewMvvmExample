@@ -65,6 +65,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return item_id;
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView id,nickname;
 
