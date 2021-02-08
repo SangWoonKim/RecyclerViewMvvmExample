@@ -9,6 +9,7 @@ import com.study.recyclermvvmexample.Service.Connection.RetrofitClient;
 import com.study.recyclermvvmexample.Service.Vo.UserDTO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import retrofit2.Call;
@@ -18,8 +19,6 @@ import retrofit2.Response;
 public class UserRepository {
     private final String TAG = getClass().getSimpleName();
     private static ArrayList<UserDTO> users;
-    String user;
-    UserDTO userParam = new UserDTO();
     private static final RetrofitClient.SelectAPI selectApI = RetrofitClient.getApiService();
     private final MutableLiveData<ArrayList<UserDTO>> userDTO = new MutableLiveData<>();
     private RetrofitClient.SelectAPI selectAPI = RetrofitClient.getApiService();
@@ -56,8 +55,11 @@ public class UserRepository {
         return userDTO;
     }
 
-    public void insert(UserDTO user){
-        new InsertAsyncTask(this.userParam).execute(user);
+    public void insert(String nickname,String pw){
+        HashMap<String, String> insertData = new HashMap<>();
+        insertData.put("nickname",nickname);
+        insertData.put("password",pw);
+        new InsertAsyncTask(insertData).execute(insertData);
     }
 
     public void update(String user, String updateUser,int position){
@@ -69,25 +71,42 @@ public class UserRepository {
     }
 
 
-    private class InsertAsyncTask extends AsyncTask<UserDTO, Void, Void>{
-        private UserDTO user;
 
-        private InsertAsyncTask(UserDTO user){
-            this.user = user;
+
+    //굳이 deprecated인 AsyncTask를 쓸 필요도 없을 뿐더러 적은 데이터를 보내는 행동이라
+    //비동기적 방식을 사용하지 않아도 되나 그냥 씀
+    private class InsertAsyncTask extends AsyncTask<HashMap<String, String>,Void,Void>{
+        private HashMap<String,String> data_send;
+
+        public InsertAsyncTask(HashMap<String, String> data_send) {
+            this.data_send = data_send;
         }
 
         @Override
-        protected Void doInBackground(UserDTO... userDTOS) {
-            //Call<UserDTO> insertCall = selectAPI.put_insert(user);
-            //insertCall.enqueue(new ..
-            //users.add(user);
-            //UserDTO.setValue(users);
+        protected Void doInBackground(HashMap<String, String>... hashMaps) {
+            Call<UserDTO> insert = selectAPI.post_Insert(data_send);
+            insert.enqueue(new Callback<UserDTO>() {
+                @Override
+                public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                    if (response.isSuccessful()){
+                        UserDTO userResponseData = response.body();
+                        int responseId = userResponseData.getId();
+                        String responseNick = userResponseData.getNickname();
+                        users.add(new UserDTO(responseId,responseNick));
+                        userDTO.setValue(users);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserDTO> call, Throwable t) {
+
+                }
+            });
+
             return null;
         }
     }
 
-    //굳이 deprecated인 AsyncTask를 쓸 필요도 없을 뿐더러 적은 데이터를 보내는 행동이라
-    //비동기적 방식을 사용하지 않아도 되나 그냥 씀
 
     private class UpdateAsyncTask extends AsyncTask<String,Void,Void>{
         private String user;
@@ -102,17 +121,14 @@ public class UserRepository {
 
         @Override
         protected Void doInBackground(String... string) {
-            Call<UserDTO> updateCall = selectAPI.put_update(user,updateUser);
+
+            Call<UserDTO> updateCall = selectAPI.patch_update(user,updateUser);
             updateCall.enqueue(new Callback<UserDTO>() {
                 @Override
                 public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                    if(response.isSuccessful()){
-                        users.set(position,response.body());
-                        //users = response.body();
-                        userDTO.setValue(users);
-                    }else{
-
-                    }
+                    UserDTO responseUser = response.body();
+                    users.set(position,responseUser);
+                    userDTO.setValue(users);
                 }
 
                 @Override
@@ -120,7 +136,6 @@ public class UserRepository {
 
                 }
             });
-
             return null;
         }
     }
@@ -142,8 +157,8 @@ public class UserRepository {
                     if(response.isSuccessful()){
                         Iterator<UserDTO> iterator= users.iterator();
                         while (iterator.hasNext()) {
-                            UserDTO hasnickname = iterator.next();
-                            if (hasnickname.getNickname().equals(user)) {
+                            UserDTO hasNickname = iterator.next();
+                            if (hasNickname.getNickname().equals(user)) {
                                iterator.remove();
                             }
                         }
@@ -156,7 +171,6 @@ public class UserRepository {
 
                 }
             });
-            getUserDTO();
             return null;
         }
     }

@@ -4,7 +4,7 @@ public class UserDTO {
 
     private int id;
     private String nickname;
-//    private String pw;
+
 
     public int getId() {
         return id;
@@ -22,11 +22,10 @@ public class UserDTO {
         this.nickname = nickname;
     }
 
-//    public String getPw() {
-//        return pw;
-//    }
-//
-//    public void setPw(String pw) {
-//        this.pw = pw;
-//    }
+    public UserDTO (int id_, String nickname_) {
+        this.id = id_;
+        this.nickname = nickname_;
+
+    }
+
 }

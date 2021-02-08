@@ -5,13 +5,18 @@ import com.google.gson.GsonBuilder;
 import com.study.recyclermvvmexample.Service.Vo.UserDTO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.DELETE;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
@@ -45,5 +50,11 @@ public class RetrofitClient {
 
         //delete에 id를 참조해 삭제하는 것 추가 서버에도 코드 추가해야함
         //insert추가
+        @FormUrlEncoded
+        @POST("create")
+        Call<UserDTO> post_Insert(@FieldMap HashMap<String, String> insert_parameter);
+
+        @PATCH("update/{nickname}/{nicknameParam}")
+        Call<UserDTO>patch_update(@Path("nickname")String searchName,@Path("nicknameParam")String updateName);
     }
 }

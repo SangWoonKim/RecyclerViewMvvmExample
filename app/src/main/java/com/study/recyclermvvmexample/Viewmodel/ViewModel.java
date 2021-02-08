@@ -20,8 +20,8 @@ public class ViewModel extends androidx.lifecycle.ViewModel {
         return users = repository.getUserDTO();
     }
 
-    public void insert(UserDTO user){
-        repository.insert(user);
+    public void insert(String nickname, String pw){
+        repository.insert(nickname,pw);
     }
 
     public void update(String user, String updateUser, int position){

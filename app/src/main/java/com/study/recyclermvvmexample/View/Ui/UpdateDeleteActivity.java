@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.study.recyclermvvmexample.R;
 import com.study.recyclermvvmexample.Service.Connection.RetrofitClient;
 import com.study.recyclermvvmexample.Service.Vo.UserDTO;
-import com.study.recyclermvvmexample.Service.repository.UserRepository;
 import com.study.recyclermvvmexample.Viewmodel.ViewModel;
 
 import retrofit2.Call;
@@ -27,7 +26,6 @@ public class UpdateDeleteActivity extends AppCompatActivity implements View.OnCl
     private Button update_btn,delete_btn;
     String selectOne,nickname,id;
     int position;
-    UserRepository repository = UserRepository.getInstance();
     ViewModel viewModel;
 
     RetrofitClient.SelectAPI selectAPI;
@@ -82,12 +80,12 @@ public class UpdateDeleteActivity extends AppCompatActivity implements View.OnCl
         switch (v.getId()){
             case R.id.update_btn:
                 String nicknameParam = nicknameParam_et.getText().toString();
-                repository.update(nickname,nicknameParam,position); //UserRepository의 update메소드 parameter String으로 변경해야함 + position값도 삽입하고 parameter변경
+                viewModel.update(nickname,nicknameParam,position); //UserRepository의 update메소드 parameter String으로 변경해야함 + position값도 삽입하고 parameter변경
                 break;
 
             case R.id.delete_btn:
                 String deleteNicknameParam = nickname_et.getText().toString();
-                repository.delete(deleteNicknameParam); //UserRepository의 delete메소드 parameter String으로 변경해야함
+                viewModel.delete(deleteNicknameParam); //UserRepository의 delete메소드 parameter String으로 변경해야함
                 break;
         }
     }
