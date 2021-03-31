@@ -1,4 +1,4 @@
-package com.study.recyclermvvmexample.View.Ui;
+package com.study.recyclermvvmexample.view.Ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,8 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.study.recyclermvvmexample.R;
-import com.study.recyclermvvmexample.Service.Connection.RetrofitClient;
-import com.study.recyclermvvmexample.Service.Vo.UserDTO;
+import com.study.recyclermvvmexample.model.Connection.RetrofitClient;
+import com.study.recyclermvvmexample.model.vo.UserDTO;
 import com.study.recyclermvvmexample.Viewmodel.ViewModel;
 
 import retrofit2.Call;

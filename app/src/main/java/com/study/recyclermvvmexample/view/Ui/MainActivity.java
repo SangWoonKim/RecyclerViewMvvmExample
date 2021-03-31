@@ -1,4 +1,4 @@
-package com.study.recyclermvvmexample.View.Ui;
+package com.study.recyclermvvmexample.view.Ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.study.recyclermvvmexample.R;
-import com.study.recyclermvvmexample.Service.Vo.UserDTO;
-import com.study.recyclermvvmexample.View.Adapter.UserAdapter;
+import com.study.recyclermvvmexample.model.vo.UserDTO;
+import com.study.recyclermvvmexample.view.adapter.UserAdapter;
 import com.study.recyclermvvmexample.Viewmodel.ViewModel;
 
 import java.util.ArrayList;
@@ -46,16 +46,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         setUpRecyclerView();
-        adapter.setOnItemClickListener(new UserAdapter.onItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                String item = adapter.getItem(position);
-                Intent selectOneIntent = new Intent(getApplicationContext(),UpdateDeleteActivity.class);
-                selectOneIntent.putExtra("idValue",item);
-                selectOneIntent.putExtra("itemPosition",position);
-                startActivity(selectOneIntent);
-            }
-        });
+//        adapter.setOnItemClickListener(new UserAdapter.onItemClickListener() {
+//            @Override
+//            public void onItemClick(View v, int position) {
+//                String item = adapter.getItem(position);
+//                Intent selectOneIntent = new Intent(getApplicationContext(),UpdateDeleteActivity.class);
+//                selectOneIntent.putExtra("idValue",item);
+//                selectOneIntent.putExtra("itemPosition",position);
+//                startActivity(selectOneIntent);
+//            }
+//        }
+//        );
 
         insert_Btn = (Button)findViewById(R.id.Insert_btn);
         insert_Btn.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         if (adapter == null){
-            adapter = new UserAdapter(MainActivity.this,users);
+            adapter = new UserAdapter(MainActivity.this, users, new UserAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    String item = adapter.getItem(position);
+                    Intent selectOneIntent = new Intent(getApplicationContext(),UpdateDeleteActivity.class);
+                    selectOneIntent.putExtra("idValue",item);
+                    selectOneIntent.putExtra("itemPosition",position);
+                    startActivity(selectOneIntent);
+                }
+            });
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
         }else{

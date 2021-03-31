@@ -1,57 +1,54 @@
-package com.study.recyclermvvmexample.View.Adapter;
+package com.study.recyclermvvmexample.view.adapter;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.study.recyclermvvmexample.BR;
 import com.study.recyclermvvmexample.R;
-import com.study.recyclermvvmexample.Service.Vo.UserDTO;
+import com.study.recyclermvvmexample.model.vo.UserDTO;
+import com.study.recyclermvvmexample.databinding.ItemBinding;
 
 import java.util.ArrayList;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
-    private onItemClickListener recyclerInterfaceListener = null;
-
-    public void setOnItemClickListener(onItemClickListener listener){
-        this.recyclerInterfaceListener = listener;
-    }
-
     Context context;
     ArrayList<UserDTO> users;
-
-
+    OnItemClickListener itemClickListener;
     public void updataData(ArrayList<UserDTO> users){
         this.users = users;
     }
 
-    public UserAdapter(Context context, ArrayList<UserDTO> users) {
+    public UserAdapter(Context context, ArrayList<UserDTO> users, OnItemClickListener listener) {
         this.context = context;
         this.users = users;
+        this.itemClickListener = listener;
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item,parent,false);
-        ViewHolder vH = new ViewHolder(view);
-        return vH;
+        return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.item,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String nickname = users.get(position).getNickname();
-        Integer id = users.get(position).getId();
+        UserDTO userDTO = users.get(position);
+        holder.bind(userDTO,itemClickListener);
 
-        holder.nickname.setText(nickname);
-        holder.id.setText(String.valueOf(id));
+    }
+
+    public String getItem(int position){
+        String item_id = Integer.toString(users.get(position).getId());
+        return item_id;
     }
 
     @Override
@@ -59,29 +56,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return users.size();
     }
 
-    public String getItem(int position){
-
-        String item_id = Integer.toString(users.get(position).getId());
-        return item_id;
-    }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView id,nickname;
+        private ItemBinding itemBinding;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(ItemBinding binding) {
+            super(binding.getRoot());
+            this.itemBinding = binding;
+        }
 
-            id = itemView.findViewById(R.id.id);
-            nickname = itemView.findViewById(R.id.nickname);
-
+        void bind(UserDTO userDTO, OnItemClickListener listener) {
+            itemBinding.setVariable(BR.userItem, userDTO);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int currentPosition = getAdapterPosition();
                     if (currentPosition != RecyclerView.NO_POSITION){
-                        if (recyclerInterfaceListener != null){
-                            recyclerInterfaceListener.onItemClick(v,currentPosition);
+                        if (itemClickListener != null){
+                            itemClickListener.onItemClick(currentPosition);
 
                             Log.d("AdapterPosition",""+getAdapterPosition());
                         }
@@ -91,8 +83,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 
-
-    public interface onItemClickListener{
-        void onItemClick(View v, int position);
+    public interface OnItemClickListener{
+        void onItemClick(int position);
     }
 }

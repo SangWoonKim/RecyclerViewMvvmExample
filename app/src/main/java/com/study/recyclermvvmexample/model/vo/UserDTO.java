@@ -1,10 +1,9 @@
-package com.study.recyclermvvmexample.Service.Vo;
+package com.study.recyclermvvmexample.model.vo;
 
 public class UserDTO {
 
     private int id;
     private String nickname;
-
 
     public int getId() {
         return id;

@@ -2,8 +2,8 @@ package com.study.recyclermvvmexample.Viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.study.recyclermvvmexample.Service.Vo.UserDTO;
-import com.study.recyclermvvmexample.Service.repository.UserRepository;
+import com.study.recyclermvvmexample.model.vo.UserDTO;
+import com.study.recyclermvvmexample.model.repository.UserRepository;
 
 import java.util.ArrayList;
 

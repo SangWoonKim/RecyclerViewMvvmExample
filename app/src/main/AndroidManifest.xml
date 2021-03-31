@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".View.Ui.UpdateDeleteActivity"></activity>
-        <activity android:name=".View.Ui.MainActivity">
+        <activity android:name=".view.Ui.UpdateDeleteActivity"></activity>
+        <activity android:name=".view.Ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

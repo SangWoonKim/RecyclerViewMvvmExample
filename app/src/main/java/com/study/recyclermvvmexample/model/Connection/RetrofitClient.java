@@ -1,8 +1,8 @@
-package com.study.recyclermvvmexample.Service.Connection;
+package com.study.recyclermvvmexample.model.Connection;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.study.recyclermvvmexample.Service.Vo.UserDTO;
+import com.study.recyclermvvmexample.model.vo.UserDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public class RetrofitClient {
-    public static final String BASE_URL ="";
+    public static final String BASE_URL ="http://10.0.2.2:3000/v1/users/\n";
 
     public static SelectAPI getApiService(){return getInstance().create(SelectAPI.class);}
 

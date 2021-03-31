@@ -1,12 +1,12 @@
-package com.study.recyclermvvmexample.Service.repository;
+package com.study.recyclermvvmexample.model.repository;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.study.recyclermvvmexample.Service.Connection.RetrofitClient;
-import com.study.recyclermvvmexample.Service.Vo.UserDTO;
+import com.study.recyclermvvmexample.model.Connection.RetrofitClient;
+import com.study.recyclermvvmexample.model.vo.UserDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
